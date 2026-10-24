@@ -17,22 +17,10 @@
         {
            app.MapPut("/products", async (UpdateProductRequest request, ISender sender) =>
             {
-                try
-                {
-                    var command = request.Adapt<UpdateProductCommand>();
-                    var result = await sender.Send(command);
-                    var response = result.Adapt<UpdateProductResponse>();
-                    return Results.Ok(response);
-                }
-                catch (ProductNotFoundException e)
-                {
-                    return Results.NotFound(e.Message);
-                }
-                catch (Exception e)
-                {
-                    return Results.Problem(e.Message);
-                }
-
+                var command = request.Adapt<UpdateProductCommand>();
+                var result = await sender.Send(command);
+                var response = result.Adapt<UpdateProductResponse>();
+                return Results.Ok(response);
             })
             .WithName("UpdateProduct")
             .Produces<UpdateProductResponse>(StatusCodes.Status200OK)
