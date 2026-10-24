@@ -10,10 +10,18 @@
         {
             app.MapDelete("/products/{id:guid}", async (Guid id, ISender sender) =>
             {
-                var command = new DeleteProductCommand(id);
-                var result = await sender.Send(command);
-                var response = result.Adapt<DeleteProductResponse>();
-                return Results.Ok(response);
+                try
+                {
+                    var command = new DeleteProductCommand(id);
+                    var result = await sender.Send(command);
+                    var response = result.Adapt<DeleteProductResponse>();
+                    return Results.Ok(response);
+
+                }
+                catch (ProductNotFoundException e)
+                {
+                    return Results.NotFound(e.Message);
+                }
             })
             .WithName("DeleteProduct")
             .Produces<DeleteProductResponse>(StatusCodes.Status200OK)

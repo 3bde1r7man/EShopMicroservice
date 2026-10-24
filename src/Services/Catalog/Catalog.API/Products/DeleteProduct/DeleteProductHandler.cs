@@ -13,8 +13,7 @@
             var product = await session.LoadAsync<Product>(command.Id, cancellationToken);
             if (product == null)
             {
-                logger.LogWarning("Product with ID {Id} not found", command.Id);
-                return new DeleteProductResult(false);
+                throw new ProductNotFoundException(command.Id);
             }
             session.Delete(product);
             await session.SaveChangesAsync(cancellationToken);
