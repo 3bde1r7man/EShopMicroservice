@@ -4,12 +4,12 @@
 
     public record DeleteProductResult(bool Success);
 
-    internal class DeleteProductHandler(IDocumentSession session, ILogger<DeleteProductHandler> logger) 
+    internal class DeleteProductCommandHandler(IDocumentSession session, ILogger<DeleteProductCommandHandler> logger) 
         : ICommandHandler<DeleteProductCommand, DeleteProductResult>
     {
         public async Task<DeleteProductResult> Handle(DeleteProductCommand command, CancellationToken cancellationToken)
         {
-            logger.LogInformation("DeleteProductHandler.Handle called with {@Command}", command);
+            logger.LogInformation("DeleteProductCommandHandler.Handle called with {@Command}", command);
             var product = await session.LoadAsync<Product>(command.Id, cancellationToken);
             if (product == null)
             {

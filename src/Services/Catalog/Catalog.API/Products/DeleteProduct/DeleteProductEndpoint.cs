@@ -22,10 +22,15 @@
                 {
                     return Results.NotFound(e.Message);
                 }
+                catch (Exception e)
+                {
+                    return Results.Problem(e.Message);
+                }
             })
             .WithName("DeleteProduct")
             .Produces<DeleteProductResponse>(StatusCodes.Status200OK)
             .ProducesProblem(StatusCodes.Status400BadRequest)
+            .ProducesProblem(StatusCodes.Status404NotFound)
             .WithDescription("Deletes a product by its ID")
             .WithSummary("Deletes a product by its ID")
             .WithDisplayName("Delete Product");
