@@ -21,6 +21,10 @@
                 {
                     return Results.NotFound(e.Message);
                 }
+                catch (Exception e)
+                {
+                    return Results.Problem(e.Message);
+                }
             })
             .WithName("GetProductById")
             .Produces<GetProductByIdResponse>(StatusCodes.Status200OK)

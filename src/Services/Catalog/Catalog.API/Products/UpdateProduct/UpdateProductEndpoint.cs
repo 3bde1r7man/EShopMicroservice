@@ -1,0 +1,47 @@
+﻿namespace Catalog.API.Products.UpdateProduct
+{
+    public record UpdateProductRequest(
+        Guid Id,
+        string Name,
+        List<string> Category,
+        string Description,
+        string ImageFile,
+        decimal Price
+    ) : IRequest<UpdateProductResult>;
+
+    public record UpdateProductResponse(bool Success);
+
+    public class UpdateProductEndpoint : ICarterModule
+    {
+        public void AddRoutes(IEndpointRouteBuilder app)
+        {
+           app.MapPut("/products", async (UpdateProductRequest request, ISender sender) =>
+            {
+                try
+                {
+                    var command = request.Adapt<UpdateProductCommand>();
+                    var result = await sender.Send(command);
+                    var response = result.Adapt<UpdateProductResponse>();
+                    return Results.Ok(response);
+                }
+                catch (ProductNotFoundException e)
+                {
+                    return Results.NotFound(e.Message);
+                }
+                catch (Exception e)
+                {
+                    return Results.Problem(e.Message);
+                }
+
+            })
+            .WithName("UpdateProduct")
+            .Produces<UpdateProductResponse>(StatusCodes.Status200OK)
+            .ProducesProblem(StatusCodes.Status400BadRequest)
+            .ProducesProblem(StatusCodes.Status404NotFound)
+            .WithSummary("Updates an existing product")
+            .WithDescription("Updates the details of an existing product with the specified ID.")
+            .WithDisplayName("Update Product");
+
+        }
+    }
+}
