@@ -5,7 +5,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
       - ASPNETCORE_HTTPS_PORTS=8081
-      - CONNECTIONSTRINGS__Database=Host=catalogdb;Port=5432;Database=CatalogDb;Username=postgres;Password=postgres;Include Error Detail=true;Pooling=true;SSL Mode=Prefer;Trust Server Certificate=true
+      - CONNECTIONSTRINGS__Database=Host=catalogdb;Port=5432;Database=CatalogDb;Username=postgres;Password=postgres;Include Error Detail=true
     ports:
       - "6000:8080"
       - "6060:8081"
@@ -26,3 +26,13 @@ services:
     restart: always
     ports:
       - "5432:5432"
+  
+  basketdb:
+    container_name: basketdb
+    environment:
+      - POSTGRES_DB=BasketDb
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    restart: always
+    ports:
+      - "5433:5432"
