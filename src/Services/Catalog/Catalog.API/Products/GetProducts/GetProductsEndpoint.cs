@@ -1,6 +1,6 @@
 ﻿namespace Catalog.API.Products.GetProducts
 {
-    public record GetProductsRequest() : IRequest<GetProductsResponse>;
+    public record GetProductsRequest(int? PageNumber = 1, int? PageSize = 10) : IRequest<GetProductsResponse>;
 
     public record GetProductsResponse(IEnumerable<Product> Products);
     
@@ -8,9 +8,9 @@
     {
         public void AddRoutes(IEndpointRouteBuilder app)
         {
-            app.MapGet("/products", async (ISender sender) =>
+            app.MapGet("/products", async (ISender sender, [AsParameters] GetProductsRequest request) =>
             {
-                var query = new GetProductsQuery();
+                var query = request.Adapt<GetProductsQuery>();
                 var result = await sender.Send(query);
                 var response = result.Adapt<GetProductsResponse>();
                 return Results.Ok(response);
