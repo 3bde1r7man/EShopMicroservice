@@ -13,9 +13,9 @@ namespace Discount.Grpc.Services
         public override async Task<CouponModel> GetDiscount(GetDiscountRequest request, ServerCallContext context)
         {
             var coupon = await dbContext.Coupons.FirstOrDefaultAsync(c => c.ProductName == request.ProductName);
-            if (coupon == null)
-                coupon = new Coupon { ProductName = request.ProductName, Amount = 0, Description = "No discount available" };
-            
+            if (coupon is null)
+                throw new RpcException(new Status(StatusCode.NotFound, $"Discount not found for ProductName: {request.ProductName}"));
+
             logger.LogInformation("Discount retrieved for ProductName: {ProductName}, Amount: {Amount}", coupon.ProductName, coupon.Amount);
 
             var couponModel = coupon.Adapt<CouponModel>();
